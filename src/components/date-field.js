@@ -2,14 +2,19 @@ import { LitElement, html, css } from 'lit';
 
 import '@vaadin/vaadin-date-picker/vaadin-date-picker.js';
 
+/**
+ * <date-field
+ *  label = "Label for Date field."
+ *  value = "Input Date."
+ * ></date-field>
+ */
 class DateField extends LitElement {
-
     /**
      * Styles for the component.
      * 
      * @returns {Array}
      */
-    static get styles (){
+    static get styles(){
         return [css`
             vaadin-date-picker{
                 width: 100%;
@@ -24,14 +29,21 @@ class DateField extends LitElement {
      */
     static get properties(){
         return {
-
             /**
-             * Object of input names, values and other properties.
+             * Label for Date field.
              * Passed from parents.
              * 
-             * @type {Object}
+             * @type {label: String}
              */
-            inputDetail: { type: Object },
+            label: { type: String },
+    
+            /**
+             * Input value.
+             * Passed from parents.
+             * 
+             * @type {Date}
+             */
+            value: { type: Date },
     
         }
     }
@@ -43,7 +55,7 @@ class DateField extends LitElement {
      */
     render(){
         return(html`
-            <vaadin-date-picker .label="${this.inputDetail.name}" value="12-05-2019">
+            <vaadin-date-picker .label="${this.label}" .value="${this.value}">
             </vaadin-date-picker>
         `)
     }

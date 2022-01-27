@@ -2,14 +2,19 @@ import { LitElement, html, css } from 'lit';
 
 import '@polymer/paper-checkbox/paper-checkbox.js';
 
+/**
+ * <checkbox-group
+ *  label = "Label for checkbox group."
+ *  checkboxList = "List of checkbox label and their values."
+ * ></checkbox-group>
+ */
 class CheckBoxGroup extends LitElement {
-
     /**
      * Styles for the component.
      * 
      * @returns {Array}
      */
-    static get styles (){
+    static get styles(){
         return [css`
             ::-webkit-scrollbar {
                 width: 10px;
@@ -66,31 +71,37 @@ class CheckBoxGroup extends LitElement {
      */
     static get properties(){
         return {
-
             /**
-             * Object of input names, values and other properties.
+             * Label for checkbox group.
              * Passed from parents.
              * 
-             * @type {Object}
+             * @type {label: String}
              */
-            inputDetail: { type: Object },
-    
+            label: { type: String },
+
+            /**
+             * List of checkbox label and their values.
+             * Passed from parents.
+             * 
+             * @type {checkboxList: Array}
+             */
+            checkboxList: { type: Array },
         }
     }
 
     /**
      * Renders Html.
      * 
-     * @returns {HTMLComponent}
+     * @returns {HTMLElement}
      */
     render(){
         return(html`
-            <h5>${this.inputDetail.name}</h5>
+            <h5>${this.label}</h5>
             <div class="checkbox-group">
                 ${
-                    this.inputDetail.boxes.map((box)=>html`
+                    this.checkboxList.map((box)=>html`
                         <div class="checkbox-container">
-                            <paper-checkbox ?checked=${box.isChecked} noink>${box.name}</paper-checkbox>
+                            <paper-checkbox ?checked=${box.isChecked}>${box.name}</paper-checkbox>
                         </div>
                     `)
                 }

@@ -1,43 +1,26 @@
 import { LitElement, html, css } from 'lit';
 
+import './dialog-box';
+import './binding-form';
+
 import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-dialog/paper-dialog.js';
-import '@polymer/iron-icon/iron-icon.js';
-import '@polymer/iron-icons/iron-icons.js';
 
+/**
+ * <binding-button></binding-button>
+ */
 class BindingButton extends LitElement {
-
     /**
      * Styles for the component.
      * 
      * @returns {Array}
      */
-    static get styles (){
+    static get styles(){
         return [css`
-            paper-dialog {
-                width: 700px;
-                border-radius: 5px;
-                overflow: auto;
-            }
-
-            paper-dialog::-webkit-scrollbar {
-                display: none;
-            }
-
             .toggle-dialogue-btn{
                 background-color: teal;
                 color: white;
                 margin-top: 20px;
                 margin-left: 20px;
-            }
-
-            .cross-button{
-                position: absolute;
-                right: 0px;
-            }
-
-            .cross-icon{
-                color: red;
             }
         `];
     }
@@ -49,14 +32,19 @@ class BindingButton extends LitElement {
      */
     static get properties(){
         return {
-
             /**
              * Object of all the input names and values.
-             * Passed from parents.
              * 
-             * @type {Object}
+             * @type { fieldDetails: Object} 
              */
             fieldDetails: { type: Object },
+            
+            /**
+             * The value that opens or close modal.
+             * 
+             * @type { isModalOpen: Boolean} 
+             */
+            isModalOpen: { type: Boolean },
         }
     }
 
@@ -66,71 +54,43 @@ class BindingButton extends LitElement {
     constructor(){
         super();
 
+        this.isModalOpen = false;
         this.fieldDetails = {
             title: "Create Binding Group",
-            fields: [
-                {
-                    name: "Name",
-                    type: "text",
-                    value: "Binding",
-                },
-                {
-                    name: "Ligands Promoted",
-                    type: "number",
-                    value: 24,
-                    isDisabled: true,
-                },
-                {
-                    name: "Description",
-                    type: "text",
-                    value: "Promising Ligands",
-                },
-                {
-                    name: "Total Ligands in Binding Group",
-                    type: "number",
-                    value: 100,
-                    isDisabled: true,
-                },
-                {
-                    name: "Date",
-                    type: "date"
-                },
-                {
-                    name: "Binding Group",
-                    type: "checkbox-group",
-                    boxes: [
-                        {
-                            name: "BRD2 Affinity_High_Affinity",
-                            isChecked: true,
-                        },
-                        {
-                            name: "BRD2 AMP_PNP_comprtitive",
-                            isChecked: false,
-                        },
-                        {
-                            name: "BRD2 NRXX-04436e354_noncompetative",
-                            isChecked: true,
-                        },
-                        {
-                            name: "BRD2 Affinity_High_Affinity",
-                            isChecked: false,
-                        },
-                        {
-                            name: "BRD2 AMP_PNP_comprtitive",
-                            isChecked: false,
-                        },
-                        {
-                            name: "BRD2 NRXX-04436e354_noncompetative",
-                            isChecked: true,
-                        },
-                    ]
-                },
-                {
-                    name: "Comments",
-                    type: "textarea"
-                },
-
-            ]
+            value: {
+                name: "Binding",
+                ligandsPromoted: 24,
+                description: "Promising Ligands",
+                totalLigands: 100,
+                isDisabled: true,
+                date: 12123432,
+                bindingGroup: [
+                    {
+                        name: "BRD2 Affinity_High_Affinity",
+                        isChecked: true,
+                    },
+                    {
+                        name: "BRD2 AMP_PNP_comprtitive",
+                        isChecked: false,
+                    },
+                    {
+                        name: "BRD2 NRXX-04436e354_noncompetative",
+                        isChecked: true,
+                    },
+                    {
+                        name: "BRD2 Affinity_High_Affinity",
+                        isChecked: false,
+                    },
+                    {
+                        name: "BRD2 AMP_PNP_comprtitive",
+                        isChecked: false,
+                    },
+                    {
+                        name: "BRD2 NRXX-04436e354_noncompetative",
+                        isChecked: true,
+                    },
+                ]
+            }
         };
     }
 
@@ -138,28 +98,22 @@ class BindingButton extends LitElement {
     /**
      * Function that toggles the Dialogue.
      */
-    toggleDialogue(){
-        this.shadowRoot.querySelector("#animated").toggle()
+    toggleBindingFormDialogue(){
+        this.isModalOpen = !this.isModalOpen;
     }
 
     /**
      * Renders Html.
      * 
-     * @returns {HTMLComponent}
+     * @returns {HTMLElement}
      */
     render(){
         return(html`
-            <paper-button class="toggle-dialogue-btn" raised @click=${this.toggleDialogue}>${this.fieldDetails.title}</paper-button>
-            <paper-dialog id="animated" modal>
-                <paper-dialog-scrollable>
-                    <div class="cross-button">
-                        <paper-button dialog-confirm>
-                            <iron-icon icon="close" class="cross-icon"></iron-icon>
-                        </paper-button>
-                    </div>
-                    <binding-form style="width: 100%" .fieldDetails=${this.fieldDetails}></binding-form>
-                </paper-dialog-scrollable>
-            </paper-dialog>
+            <paper-button class="toggle-dialogue-btn" raised @click=${this.toggleBindingFormDialogue}>${this.fieldDetails.title}</paper-button>
+            <dialog-box ?opened=${this.isModalOpen} .closeDialog=${this.toggleBindingFormDialogue.bind(this)}>
+                <binding-form style="width: 100%" .fieldDetails=${this.fieldDetails}
+                 .toggleBindingFormDialogue=${this.toggleBindingFormDialogue.bind(this)}></binding-form>
+            </dialog-box>
         `)
     }
 }
